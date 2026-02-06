@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>for you</title>
     <style>
-        /* Aesthetic font import */
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Inter:wght@300&display=swap');
 
         body {
@@ -14,7 +13,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #faf9f6; /* Off-white aesthetic */
+            /* Aesthetic soft gradient background */
+            background: linear-gradient(135deg, #faf9f6 0%, #fdf0f0 100%); 
             font-family: 'Inter', sans-serif;
             overflow: hidden;
             color: #4a4a4a;
@@ -22,24 +22,21 @@
 
         .container {
             text-align: center;
-            padding: 2rem;
-            z-index: 10;
+            padding: 3rem;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 40px;
         }
 
         h1 {
             font-family: 'Bodoni Moda', serif;
             font-weight: 400;
             font-style: italic;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 2rem;
-            letter-spacing: -0.5px;
-            color: #8e7d7d; /* Muted rose gray */
-        }
-
-        .gif-space {
-            font-size: 50px;
-            margin-bottom: 20px;
-            filter: sepia(0.2); /* Softens the emoji color */
+            color: #8e7d7d;
+            line-height: 1.4;
         }
 
         .button-wrapper {
@@ -47,67 +44,64 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
-            height: 100px; /* Space for the jumping button */
+            min-height: 50px;
         }
 
         button {
-            padding: 10px 30px;
+            padding: 12px 30px;
             border: 1px solid #e0d8d8;
             background: white;
             color: #8e7d7d;
-            border-radius: 50px; /* Pill shape */
+            border-radius: 40px;
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            outline: none;
+            font-size: 0.8rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            letter-spacing: 1px;
         }
 
         #yesBtn {
-            background-color: #fdf0f0; /* Very soft pink */
+            background-color: #fdf0f0;
             border: 1px solid #f2e4e4;
-        }
-
-        #yesBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         #noBtn {
             position: relative;
         }
 
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
 
         #successMessage {
-            font-family: 'Bodoni Moda', serif;
-            font-style: italic;
-            color: #8e7d7d;
-            animation: fadeIn 1s ease;
+            animation: fadeIn 1.5s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .heart-icon {
+            color: #d8b4b4;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            display: block;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="gif-space">☁️</div>
-        <h1 id="mainHeading">all my love, for you. <br>be my valentine?</h1>
+        <h1 id="mainHeading">a thousand times, yes?<br>be mine?</h1>
         
         <div class="button-wrapper" id="buttons">
-            <button id="yesBtn" onclick="accepted()">yes</button>
+            <button id="yesBtn" onclick="accepted()">forever.</button>
             <button id="noBtn" onmouseover="jumble()">no</button>
         </div>
 
         <div id="successMessage" class="hidden">
-            <p>i knew it would be you.</p>
-            <p style="font-size: 0.8rem; margin-top: 10px;">see you on the 14th. ♡</p>
+            <p style="font-family: 'Bodoni Moda'; font-style: italic; font-size: 1.6rem; color: #8e7d7d; margin-bottom: 5px;">yours, always.</p>
+            <p style="font-size: 0.85rem; color: #a19494; letter-spacing: 0.5px;">i’d choose you in every lifetime.</p>
+            <span class="heart-icon">♡</span>
         </div>
     </div>
 
@@ -116,50 +110,28 @@
 
         function jumble() {
             const noBtn = document.getElementById('noBtn');
-            
-            // Jumble logic: Move to random positions
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 100);
             
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            noCount++;
+            // Aesthetic "No" phrases
+            const phrases = ["not today.", "impossible.", "rethink?", "system error."];
+            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
-            // After 5 attempts to click no, it disappears entirely
-            if (noCount > 5) {
-                noBtn.style.display = 'none';
+            noCount++;
+            if(noCount > 5) {
+                noBtn.style.opacity = '0'; // Soft fade out
+                setTimeout(() => noBtn.style.display = 'none', 400);
             }
         }
 
         function accepted() {
-            document.getElementById('mainHeading').innerHTML = "yours, always.";
+            document.getElementById('mainHeading').classList.add('hidden');
             document.getElementById('buttons').classList.add('hidden');
             document.getElementById('successMessage').classList.remove('hidden');
-            
-            // Subtle aesthetic heart rain
-            setInterval(rainHearts, 300);
-        }
-
-        function rainHearts() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '✨'; // Star sparkle instead of bright hearts for aesthetic
-            heart.style.position = 'fixed';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '-20px';
-            heart.style.fontSize = '15px';
-            heart.style.opacity = '0.5';
-            heart.style.zIndex = '1';
-            heart.style.transition = `top 4s linear`;
-            
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.style.top = '100vh';
-            }, 100);
-
-            setTimeout(() => heart.remove(), 4000);
         }
     </script>
 </body>
