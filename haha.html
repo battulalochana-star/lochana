@@ -129,11 +129,10 @@
             const phrases = ["wait..", "rethink?", "nice try.", "error.", "almost!", "nope.", "try harder."];
             noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
-            noCount++;
-            if(noCount >= 1000000000) {
-                noBtn.style.opacity = '100000'; 
+               // --- CHANGE THE NUMBER 10 BELOW ---
+                noBtn.style.opacity = '0'; 
                 noBtn.style.pointerEvents = 'none';
-                setTimeout(() => noBtn.style.display = 'none', 50000000);
+                setTimeout(() => noBtn.style.display = 'none', 400);
             }
         }
 
