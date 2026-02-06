@@ -115,7 +115,7 @@
     </div>
 
     <script>
-        let noCount = 10;
+        let noCount = 1000;
 
         function jumble() {
             const noBtn = document.getElementById('noBtn');
@@ -130,10 +130,10 @@
             noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
             noCount++;
-            if(noCount >= 1000) {
-                noBtn.style.opacity = '100'; 
+            if(noCount >= 1000000000) {
+                noBtn.style.opacity = '100000'; 
                 noBtn.style.pointerEvents = 'none';
-                setTimeout(() => noBtn.style.display = 'none', 500);
+                setTimeout(() => noBtn.style.display = 'none', 50000000);
             }
         }
 
