@@ -115,7 +115,7 @@
     </div>
 
     <script>
-        let noCount = 0;
+        let noCount = 10;
 
         function jumble() {
             const noBtn = document.getElementById('noBtn');
@@ -131,7 +131,7 @@
 
             noCount++;
             if(noCount >= 1000) {
-                noBtn.style.opacity = '0'; 
+                noBtn.style.opacity = '100'; 
                 noBtn.style.pointerEvents = 'none';
                 setTimeout(() => noBtn.style.display = 'none', 500);
             }
