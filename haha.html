@@ -129,8 +129,7 @@
             const phrases = ["wait..", "rethink?", "nice try.", "error.", "almost!", "nope.", "try harder."];
             noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
-// Make sure the button stays fixed relative to the screen so it can "run                noBtn.style.opacity = '0'; 
-                noBtn.style.pointerEvents = 'none';
+// Make sure the button stays fixed relative to the screen so it can "run
                 setTimeout(() => noBtn.style.display = 'none', 400);
             }
         }
