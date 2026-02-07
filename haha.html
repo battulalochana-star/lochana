@@ -9,13 +9,15 @@
 
         body {
             margin: 0;
+            padding: 0;
             height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #2d0b0b 0%, #4a0e0e 100%); 
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Prevents scrollbars from appearing */
             color: #faf9f6;
         }
 
@@ -33,18 +35,14 @@
             font-size: 45px;
             margin-bottom: 20px;
             display: block;
-            opacity: 0.9;
         }
 
         h1 {
             font-family: 'Bodoni Moda', serif;
-            font-weight: 400;
             font-style: italic;
             font-size: 1.6rem;
             margin-bottom: 2.5rem;
             color: #f2e4e4;
-            line-height: 1.5;
-            letter-spacing: -0.5px;
         }
 
         .button-wrapper {
@@ -52,7 +50,7 @@
             justify-content: center;
             align-items: center;
             gap: 25px;
-            min-height: 60px;
+            min-height: 80px;
         }
 
         button {
@@ -60,10 +58,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 0.85rem;
-            /* Smooth jump animation */
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            letter-spacing: 1px;
-            outline: none;
+            transition: all 0.2s ease-out; /* Slightly faster for responsiveness */
             border: none;
             font-weight: 500;
             text-transform: lowercase;
@@ -72,30 +67,22 @@
         #yesBtn {
             background-color: #ffffff;
             color: #4a0e0e;
-            z-index: 5;
         }
 
         #noBtn {
             background-color: #ffffff; 
             color: #4a0e0e;
-            z-index: 10;
+            position: relative; /* Starts relative, turns fixed on move */
         }
 
         .hidden { display: none !important; }
 
         #successMessage {
-            animation: slideUp 1.5s ease forwards;
+            animation: slideUp 1s ease forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -110,9 +97,8 @@
         </div>
 
         <div id="successMessage" class="hidden">
-            <p style="font-family: 'Bodoni Moda'; font-style: italic; font-size: 1.8rem; color: #f2e4e4; margin-bottom: 8px;">yours, always.</p>
-            <p style="font-size: 0.85rem; color: #d8b4b4; letter-spacing: 1px;">written in the karma you can't do anything about hehheeee......😂</p>
-            <span style="font-size: 1.2rem; margin-top: 15px; display: block; opacity: 0.6;">♡</span>
+            <p style="font-family: 'Bodoni Moda'; font-style: italic; font-size: 1.8rem; color: #f2e4e4;">yours, always.</p>
+            <p style="font-size: 0.85rem; color: #d8b4b4;">written in the karma you can't do anything about...</p>
         </div>
     </div>
 
@@ -124,30 +110,39 @@
             const noBtn = document.getElementById('noBtn');
             moveCount++;
 
-            // Check if they have reached the limit
             if (moveCount >= maxMoves) {
-                noBtn.classList.add('hidden'); // Button gives up and disappears
+                noBtn.style.display = 'none';
                 return;
             }
 
-            // Calculate movement within the screen boundaries
-            const btnWidth = noBtn.offsetWidth;
-            const btnHeight = noBtn.offsetHeight;
-            
-            const x = Math.random() * (window.innerWidth - btnWidth);
-            const y = Math.random() * (window.innerHeight - btnHeight);
-            
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+            // Get viewport dimensions accurately
+            const vWidth = window.innerWidth;
+            const vHeight = window.innerHeight;
 
-            // Change phrases based on how many times they've tried
-            const phrases = ["wait..", "rethink?", "nice try.", "error.", "almost!", "nope.", "try harder."];
-            if (moveCount > 15) {
-                noBtn.innerText = "giving up soon...";
-            } else {
-                noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
-            }
+            // Get button dimensions
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnWidth = btnRect.width;
+            const btnHeight = btnRect.height;
+
+            // Safety margin (so it doesn't touch the very edge of the screen)
+            const padding = 20;
+
+            // Calculate max available space
+            const maxX = vWidth - btnWidth - padding;
+            const maxY = vHeight - btnHeight - padding;
+
+            // Generate coordinates (starting from 'padding' instead of 0)
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            // Apply Fixed position and new coordinates
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+
+            // Text updates
+            const phrases = ["no.", "try again!", "nope", "can't catch me", "rethink?", "nice try"];
+            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
         }
 
         function accepted() {
