@@ -17,7 +17,7 @@
             align-items: center;
             background: linear-gradient(135deg, #2d0b0b 0%, #4a0e0e 100%); 
             font-family: 'Inter', sans-serif;
-            overflow: hidden; /* Prevents scrollbars from appearing */
+            overflow: hidden; 
             color: #faf9f6;
         }
 
@@ -28,7 +28,7 @@
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(12px);
             border-radius: 40px;
-            animation: fadeIn 2s ease;
+            z-index: 1;
         }
 
         .emoji {
@@ -58,10 +58,10 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: all 0.2s ease-out; /* Slightly faster for responsiveness */
             border: none;
             font-weight: 500;
             text-transform: lowercase;
+            /* Removed transition to stop the "vanishing/sliding" look */
         }
 
         #yesBtn {
@@ -72,17 +72,17 @@
         #noBtn {
             background-color: #ffffff; 
             color: #4a0e0e;
-            position: relative; /* Starts relative, turns fixed on move */
+            position: relative;
+            z-index: 999; /* Keeps it above everything */
         }
 
         .hidden { display: none !important; }
 
         #successMessage {
-            animation: slideUp 1s ease forwards;
+            animation: fadeIn 1s ease forwards;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -98,7 +98,7 @@
 
         <div id="successMessage" class="hidden">
             <p style="font-family: 'Bodoni Moda'; font-style: italic; font-size: 1.8rem; color: #f2e4e4;">yours, always.</p>
-            <p style="font-size: 0.85rem; color: #d8b4b4;">written in the karma you can't do anything...</p>
+            <p style="font-size: 0.85rem; color: #d8b4b4;">written in the karma you can't do anything heheeeeeee ummmmmmmmmmmah <3...</p>
         </div>
     </div>
 
@@ -108,40 +108,39 @@
 
         function jumble() {
             const noBtn = document.getElementById('noBtn');
+            
+            // Increment moves
             moveCount++;
 
+            // If it hits the limit, hide it
             if (moveCount >= maxMoves) {
                 noBtn.style.display = 'none';
                 return;
             }
 
-            // Get viewport dimensions accurately
+            // Get viewport and button dimensions
             const vWidth = window.innerWidth;
             const vHeight = window.innerHeight;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
 
-            // Get button dimensions
-            const btnRect = noBtn.getBoundingClientRect();
-            const btnWidth = btnRect.width;
-            const btnHeight = btnRect.height;
+            // Define a safe margin
+            const padding = 50; 
 
-            // Safety margin (so it doesn't touch the very edge of the screen)
-            const padding = 20;
-
-            // Calculate max available space
+            // Calculate random coordinates inside the visible screen
             const maxX = vWidth - btnWidth - padding;
             const maxY = vHeight - btnHeight - padding;
 
-            // Generate coordinates (starting from 'padding' instead of 0)
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-            // Apply Fixed position and new coordinates
+            // Apply new position
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
-            // Text updates
-            const phrases = ["no.", "try again!", "nope", "can't catch me", "rethink?", "nice try"];
+            // Change text
+            const phrases = ["no.", "try again!", "nope", "uh-uh", "rethink?", "nice try"];
             noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
         }
 
