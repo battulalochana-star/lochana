@@ -27,6 +27,7 @@
             backdrop-filter: blur(12px);
             border-radius: 40px;
             animation: fadeIn 2s ease;
+            z-index: 1;
         }
 
         .emoji {
@@ -60,7 +61,8 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            /* Smooth sliding effect */
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             letter-spacing: 1px;
             outline: none;
             border: none;
@@ -74,9 +76,9 @@
         }
 
         #noBtn {
-            position: relative;
             background-color: #ffffff; 
             color: #4a0e0e;
+            z-index: 10;
         }
 
         .hidden { display: none; }
@@ -104,34 +106,43 @@
         
         <div class="button-wrapper" id="buttons">
             <button id="yesBtn" onclick="accepted()">yes</button>
-            <button id="noBtn" onmouseover="jumble()">no</button>
+            <button id="noBtn" onmouseover="moveButton()">no</button>
         </div>
 
         <div id="successMessage" class="hidden">
             <p style="font-family: 'Bodoni Moda'; font-style: italic; font-size: 1.8rem; color: #f2e4e4; margin-bottom: 8px;">yours, always.</p>
-            <p style="font-size: 0.85rem; color: #d8b4b4; letter-spacing: 1px;">written in the karma you can't do anything hehheeee......😂</p>
+            <p style="font-size: 0.85rem; color: #d8b4b4; letter-spacing: 1px;">written in the karma you can't do anything about hehheeee......😂</p>
             <span style="font-size: 1.2rem; margin-top: 15px; display: block; opacity: 0.6;">♡</span>
         </div>
     </div>
 
     <script>
-        let noCount = 1000;
-
-        function jumble() {
+        function moveButton() {
             const noBtn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - 150);
-            const y = Math.random() * (window.innerHeight - 100);
             
+            // Set position to fixed only once the movement starts
             noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
 
-            const phrases = ["wait..", "rethink?", "nice try.", "error.", "almost!", "nope.", "try harder."];
+            // Get the button's current width and height
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            // Calculate safe boundaries (Screen size - Button size)
+            // This ensures the button stays fully visible inside the window
+            const maxX = window.innerWidth - btnWidth;
+            const maxY = window.innerHeight - btnHeight;
+
+            // Generate random coordinates within those safe bounds
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            // Apply the new position
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+
+            // Randomly change the text for extra sass
+            const phrases = ["nice try!", "nope", "wait..", "rethink?", "error 404", "try again", "over here!"];
             noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
-
-// Make sure the button stays fixed relative to the screen so it can "run
-                setTimeout(() => noBtn.style.display = 'none', 400);
-            }
         }
 
         function accepted() {
