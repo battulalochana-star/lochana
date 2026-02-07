@@ -27,7 +27,6 @@
             backdrop-filter: blur(12px);
             border-radius: 40px;
             animation: fadeIn 2s ease;
-            z-index: 1;
         }
 
         .emoji {
@@ -61,7 +60,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 0.85rem;
-            /* Smooth sliding effect */
+            /* Smooth jump animation */
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             letter-spacing: 1px;
             outline: none;
@@ -73,6 +72,7 @@
         #yesBtn {
             background-color: #ffffff;
             color: #4a0e0e;
+            z-index: 5;
         }
 
         #noBtn {
@@ -81,7 +81,7 @@
             z-index: 10;
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         #successMessage {
             animation: slideUp 1.5s ease forwards;
@@ -106,7 +106,7 @@
         
         <div class="button-wrapper" id="buttons">
             <button id="yesBtn" onclick="accepted()">yes</button>
-            <button id="noBtn" onmouseover="moveButton()">no</button>
+            <button id="noBtn" onmouseover="jumble()">no</button>
         </div>
 
         <div id="successMessage" class="hidden">
@@ -117,32 +117,37 @@
     </div>
 
     <script>
-        function moveButton() {
-            const noBtn = document.getElementById('noBtn');
-            
-            // Set position to fixed only once the movement starts
-            noBtn.style.position = 'fixed';
+        let moveCount = 0;
+        const maxMoves = 20;
 
-            // Get the button's current width and height
+        function jumble() {
+            const noBtn = document.getElementById('noBtn');
+            moveCount++;
+
+            // Check if they have reached the limit
+            if (moveCount >= maxMoves) {
+                noBtn.classList.add('hidden'); // Button gives up and disappears
+                return;
+            }
+
+            // Calculate movement within the screen boundaries
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
+            
+            const x = Math.random() * (window.innerWidth - btnWidth);
+            const y = Math.random() * (window.innerHeight - btnHeight);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
 
-            // Calculate safe boundaries (Screen size - Button size)
-            // This ensures the button stays fully visible inside the window
-            const maxX = window.innerWidth - btnWidth;
-            const maxY = window.innerHeight - btnHeight;
-
-            // Generate random coordinates within those safe bounds
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-
-            // Apply the new position
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-
-            // Randomly change the text for extra sass
-            const phrases = ["nice try!", "nope", "wait..", "rethink?", "error 404", "try again", "over here!"];
-            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            // Change phrases based on how many times they've tried
+            const phrases = ["wait..", "rethink?", "nice try.", "error.", "almost!", "nope.", "try harder."];
+            if (moveCount > 15) {
+                noBtn.innerText = "giving up soon...";
+            } else {
+                noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            }
         }
 
         function accepted() {
