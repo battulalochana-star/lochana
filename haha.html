@@ -29,6 +29,7 @@
             backdrop-filter: blur(12px);
             border-radius: 40px;
             z-index: 1;
+            position: relative; /* Added for button positioning */
         }
 
         .emoji {
@@ -51,6 +52,7 @@
             align-items: center;
             gap: 25px;
             min-height: 80px;
+            position: relative; /* Ensure buttons position relative to this */
         }
 
         button {
@@ -61,7 +63,6 @@
             border: none;
             font-weight: 500;
             text-transform: lowercase;
-            /* Removed transition to stop the "vanishing/sliding" look */
         }
 
         #yesBtn {
@@ -72,8 +73,8 @@
         #noBtn {
             background-color: #ffffff; 
             color: #4a0e0e;
-            position: relative;
-            z-index: 999; /* Keeps it above everything */
+            position: absolute; /* Changed to absolute for container-relative positioning */
+            z-index: 999;
         }
 
         .hidden { display: none !important; }
@@ -98,13 +99,14 @@
 
         <div id="successMessage" class="hidden">
             <p style="font-family: 'Bodoni Moda'; font-style: italic; font-size: 1.8rem; color: #f2e4e4;">yours, always.</p>
-            <p style="font-size: 0.85rem; color: #d8b4b4;">written in the karma you can't do anything heheeeeeee ummmmmmmmmmmah <3...</p>
+            <p style="font-size: 0.85rem; color: #d8b4b4;">written in the karma you can't do anything heheeeee😂 ummmmmmmmmah babyy <3...</p>
         </div>
     </div>
 
     <script>
         let moveCount = 0;
         const maxMoves = 20;
+        const buttonWrapper = document.getElementById('buttons');
 
         function jumble() {
             const noBtn = document.getElementById('noBtn');
@@ -118,26 +120,29 @@
                 return;
             }
 
-            // Get viewport and button dimensions
-            const vWidth = window.innerWidth;
-            const vHeight = window.innerHeight;
+            // Get container bounds and button dimensions
+            const containerRect = buttonWrapper.getBoundingClientRect();
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
 
-            // Define a safe margin
-            const padding = 50; 
+            // Define safe padding inside container
+            const padding = 10; 
 
-            // Calculate random coordinates inside the visible screen
-            const maxX = vWidth - btnWidth - padding;
-            const maxY = vHeight - btnHeight - padding;
+            // Calculate random coordinates inside the container
+            const maxX = containerRect.width - btnWidth - padding;
+            const maxY = containerRect.height - btnHeight - padding;
 
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-            // Apply new position
+            // Position relative to container (using container's offset)
+            const containerLeft = containerRect.left;
+            const containerTop = containerRect.top;
+
+            // Apply new position relative to viewport, but constrained to container
             noBtn.style.position = 'fixed';
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
+            noBtn.style.left = (containerLeft + randomX) + 'px';
+            noBtn.style.top = (containerTop + randomY) + 'px';
 
             // Change text
             const phrases = ["no.", "try again!", "nope", "uh-uh", "rethink?", "nice try"];
